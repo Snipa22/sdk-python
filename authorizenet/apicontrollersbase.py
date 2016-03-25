@@ -8,7 +8,6 @@ import logging
 import pyxb
 import xml.dom.minidom
 from pip._vendor import requests
-from _pyio import __metaclass__
 
 from authorizenet.constants import constants
 from authorizenet import apicontractsv1
@@ -18,9 +17,7 @@ from authorizenet.apicontractsv1 import merchantAuthenticationType
 from authorizenet.apicontractsv1 import ANetApiRequest
 from authorizenet.apicontractsv1 import ANetApiResponse
 '''
-class APIOperationBaseInterface(object):
-    
-    __metaclass__ = abc.ABCMeta
+class APIOperationBaseInterface(object, metaclass=abc.ABCMeta):
     
     @abc.abstractmethod
     def execute(self):
@@ -65,9 +62,8 @@ class APIOperationBaseInterface(object):
         '''TODO'''
         pass
 
-class APIOperationBase(APIOperationBaseInterface):
-    __metaclass__ = abc.ABCMeta
-        
+class APIOperationBase(APIOperationBaseInterface, metaclass=abc.ABCMeta):
+
     __initialized = False
     __merchantauthentication = "null"
     __environment = "null"
@@ -95,8 +91,8 @@ class APIOperationBase(APIOperationBaseInterface):
         
         xmlRequest = self._request.toxml(encoding=constants.xml_encoding, element_name=self.getrequesttype())
         #remove namespaces that toxml() generates
-        xmlRequest = xmlRequest.replace(constants.nsNamespace1, '')
-        xmlRequest = xmlRequest.replace(constants.nsNamespace2, '')
+        xmlRequest = xmlRequest.replace(constants.nsNamespace1, b'')
+        xmlRequest = xmlRequest.replace(constants.nsNamespace2, b'')
         
         return xmlRequest
     
@@ -144,7 +140,7 @@ class APIOperationBase(APIOperationBaseInterface):
             else:    
                 if type(self.getresponseclass()) == type(self._response):
                     if self._response.messages.resultCode == "Error":
-                        print "Response error"
+                        print("Response error")
             
                     domResponse = xml.dom.minidom.parseString(self._httpResponse)
                     logging.debug('Received response: %s' % domResponse.toprettyxml())
@@ -152,7 +148,7 @@ class APIOperationBase(APIOperationBaseInterface):
                     #Need to handle ErrorResponse 
                     logging.debug('Error retrieving response for request: %s' % self._request)
         else:
-            print "Did not receive http response"
+            print("Did not receive http response")
         return
     
     def getresponse(self):

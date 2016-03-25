@@ -4,8 +4,8 @@ Created on Nov 4, 2015
 @author: krgupta
 '''
 
-from ConfigParser import SafeConfigParser
-from ConfigParser import NoSectionError
+from configparser import SafeConfigParser
+from configparser import NoSectionError
 import os
 import sys
 #from __future__ import print_function
